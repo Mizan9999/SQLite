@@ -65,6 +65,8 @@ def main():
                 print(user)
     finally:
         connection.close()
+        print("")
+
 
 if __name__ == "__main__":
     main()
