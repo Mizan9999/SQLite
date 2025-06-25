@@ -46,6 +46,14 @@ def fetch_users(connection, condition: str = None) -> list[tuple]:
     except Exception as e:
         print(e)
 
+def delete_user(connection, user_id:int):
+    query = "DELETE FROM user WHERE id = ?"
+    try:
+        with connection:
+            connection.execute(query,(user_id))
+        print(f"USER ID: {user_id} was deleted!")
+    except Exception as e:
+        print(e)
 
 def main():
     connection = get_connection("subscribe.db")
@@ -63,6 +71,10 @@ def main():
             print("ALL Users:")
             for user in fetch_users(connection):
                 print(user)
+
+        elif start == "delete":
+            user_id = int(input("Enter User id: "))
+            delete_user(connection, user_id)
     finally:
         connection.close()
 
