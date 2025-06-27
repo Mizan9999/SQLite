@@ -55,6 +55,24 @@ def delete_user(connection, user_id:int):
     except Exception as e:
         print(e)
 
+def update_user(connection, user_id:int, email:str):
+    query = "UPDATE user SET email = ? WHERE id = ?"
+    try :
+        with connection:
+            connection.execute(query, (email, user_id))
+        print(f"User ID {user_id} has new email of {email}")
+    except Exception as e:
+        print(e)
+    
+def insert_user(connection, users:list[tuple[str, int, str]]):
+    query = "INSERT INTO users (name, age, email) VALUES (?,?,?)"
+    try:
+        with connection:
+            connection.executemany(query, users)
+            print(f"{len(users)} users were added to the database!")
+    except Exception as e:
+        print(e)
+
 def main():
     connection = get_connection("subscribe.db")
     try:
@@ -75,6 +93,17 @@ def main():
         elif start == "delete":
             user_id = int(input("Enter User id: "))
             delete_user(connection, user_id)
+        elif start == "update":
+            user_id = int(input("Enter User id: "))
+            new_email = input("Enter new email: ")
+            update_user(connection, user_id, email)
+        
+        elif start == "add many":
+            users = [("Chandler", 29, "none@gmail.com"),
+                     ("Jinja", 24, "jinja@gmail.com"),
+                     ("fuska", 20, "fuska@gmail.com")]
+            insert_user(connection, users)
+
     finally:
         connection.close()
 
